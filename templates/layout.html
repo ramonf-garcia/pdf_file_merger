@@ -11,9 +11,16 @@
   <div>
     <ul class="flashes list-group">
     {% for message in messages %}
-      <li class="list-group-item list-group-item-warning">{{ message }}</li>
+      {% if "ERROR" in message %}
+        {% set alert_class = "list-group-item list-group-item-danger" %}
+      {% elif "SUCCESS" in message %}
+        {% set alert_class = "list-group-item list-group-item-success" %}
+      {% else %}
+        {% set alert_class = "list-group-item list-group-item-warning" %}
+      {% endif %}
+      <li class="{{alert_class}}">{{ message }}</li>
     {% endfor %}
-    </ul>
+    </ul><br/>
   </div>
   {% endif %}
 </div>

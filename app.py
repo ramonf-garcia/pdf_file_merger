@@ -112,6 +112,11 @@ def upload_file():
 def download_file(filename):
     return send_from_directory(app.config["DOWNLOAD_FOLDER"], filename)
 
+@app.errorhandler(400)
+def page_not_found(e):
+    flash("Uh oh! that was a bad request, try a different one!")
+    return render_template('index.html')
+
 @app.errorhandler(404)
 def page_not_found(e):
     flash("Uh oh! that page was not found")

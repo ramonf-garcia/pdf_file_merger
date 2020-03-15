@@ -114,17 +114,17 @@ def download_file(filename):
 
 @app.errorhandler(400)
 def page_not_found(e):
-    flash("Uh oh! that was a bad request, try a different one!")
+    flash("Uh oh! that was a bad request, try starting from scratch!")
     return render_template('index.html')
 
 @app.errorhandler(404)
 def page_not_found(e):
-    flash("Uh oh! that page was not found")
+    flash("Uh oh! that page was not found, check your addressbar!")
     return render_template('index.html')
 
 @app.errorhandler(500)
 def page_not_found(e):
-    flash("ERROR - It is not you, I'm a bad program")
+    flash("ERROR - It is not you, I'm a bad program and I failed to save your files")
     return render_template('index.html')
 
 @app.before_first_request

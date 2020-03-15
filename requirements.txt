@@ -1,0 +1,5 @@
+Flask==1.1.1
+Flask-WTF==0.14.3
+pdf==2020.1.6
+pyPdf==1.13
+PyPDF2==1.26.0

@@ -8,14 +8,19 @@ from flask import (
     url_for,
     send_from_directory,
 )
+from flask_wtf.csrf import CsrfProtect
 from werkzeug.utils import secure_filename
 from PyPDF2 import PdfFileReader, PdfFileWriter
+import logging
+from logging.handlers import RotatingFileHandler
 import datetime
 import os
 import sys
 
 app = Flask(__name__, static_folder="static", static_url_path="")
 app.config.from_pyfile("./config/app.cfg")
+CsrfProtect(app)
+
 
 def allowed_file(filename):
     return (
@@ -117,6 +122,18 @@ def page_not_found(e):
     flash("ERROR - It is not you, I'm a bad program")
     return render_template('index.html')
 
+@app.before_first_request
+def set_logging():
+    if not app.config["DEBUG"]:
+        handler = RotatingFileHandler(
+            app.config["LOG_FILE"],
+            maxBytes=app.config["LOG_SIZE"],
+            backupCount=app.config["LOG_COUNT"]
+        )
+        handler.setFormatter = logging.Formatter(app.config["LOG_FORMAT"])
+        handler.setLevel(app.config["LOG_LEVEL"])
+        app.logger.addHandler(handler)
+
 if __name__ == "__main__":
     app.secret_key = app.config["SECRET"]
-    app.run(host="0.0.0.0", port=app.config["PORT"], debug=True)
+    app.run(host="0.0.0.0", port=app.config["PORT"], debug=app.config["DEBUG"])

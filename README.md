@@ -1,5 +1,4 @@
 # PDF file merger
-===
 
 This is a simple flask application to upload your files to your own machine and save them as a new file where all docs are merged *in the order they were uploaded*
 

@@ -6,22 +6,18 @@ from flask import (
     flash,
     url_for,
     send_from_directory,
-    Blueprint
+    Blueprint,
 )
 import os
 import logging
-from control import (
-    merge_pdfs,
-    clean_uploads,
-    allowed_file,
-    save_files
-)
+from control import merge_pdfs, clean_uploads, allowed_file, save_files
 
 UPLOADS = "uploads"
 DOWNLOADS = "downloads"
 EXTENSION = "pdf"
 
 pdf_merger = Blueprint("pdf_merger", __name__)
+
 
 @pdf_merger.route("/")
 def index():
@@ -42,15 +38,19 @@ def upload_file():
         if error:
             flash(error)
             return redirect(url_for("index"))
-        download_filename, error = merge_pdfs(merge_list, EXTENSION, DOWNLOADS, output_filename)
+        download_filename, error = merge_pdfs(
+            merge_list, EXTENSION, DOWNLOADS, output_filename
+        )
         clean_uploads(merge_list)
         if not error:
             flash(f"SUCCESS - File: {download_filename} generated!")
-            return redirect(url_for("pdf_merger.download_file", filename=download_filename))
+            return redirect(
+                url_for("pdf_merger.download_file", filename=download_filename)
+            )
         else:
             logging.error("Merge did not return a filename, something went wrong")
             if not error:
-               flash(f"ERROR - {error}")
+                flash(f"ERROR - {error}")
             return redirect(url_for("index"))
     else:
         return render_template("upload.html")

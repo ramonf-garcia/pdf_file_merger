@@ -18,10 +18,7 @@ def save_files(file_list, extension, uploads):
         if uploaded_file and allowed_file(uploaded_file.filename, extension):
             filename = secure_filename(uploaded_file.filename)
             try:
-                uploaded_filename = os.path.join(
-                    uploads,
-                    filename
-                )
+                uploaded_filename = os.path.join(uploads, filename)
                 uploaded_file.save(uploaded_filename)
                 merge_list.append(uploaded_filename)
             except IOError as error:
@@ -30,6 +27,7 @@ def save_files(file_list, extension, uploads):
         else:
             return None, f"ERROR - Failed to upload file: {filename}"
     return merge_list, None
+
 
 def merge_pdfs(input_files, extension, downloads, output_filename=None):
     """Join all the files in a list and save those to the filename in the output_filename"""

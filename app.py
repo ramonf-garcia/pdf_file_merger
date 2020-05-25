@@ -1,29 +1,25 @@
 from flask import Flask
-from flask_wtf.csrf import CsrfProtect
+from flask_wtf.csrf import CSRFProtect
 import os
-from logging.handlers import RotatingFileHandler
+from logging import FileHandler
 import logging
+from views import pdf_merger
 
 
 app = Flask(__name__, static_folder="static", static_url_path="")
 app.config.from_pyfile("./config/app.cfg")
-CsrfProtect(app)
+app.register_blueprint(pdf_merger)
+CSRFProtect(app)
 
 
 @app.before_first_request
 def set_logging():
     if not app.config["DEBUG"]:
-        handler = RotatingFileHandler(
-            os.path.join(app.config["LOGGING_FOLDER"], app.config["LOG_FILE"]),
-            maxBytes=app.config["LOG_SIZE"],
-            backupCount=app.config["LOG_COUNT"],
-        )
+        handler = FileHandler(filename=app.config["LOG_FILE"])
         handler.setFormatter = logging.Formatter(app.config["LOG_FORMAT"])
         handler.setLevel(app.config["LOG_LEVEL"])
         app.logger.addHandler(handler)
 
-
-from views import *
 
 if __name__ == "__main__":
     app.secret_key = app.config["SECRET"]
